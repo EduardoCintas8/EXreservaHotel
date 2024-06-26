@@ -13,31 +13,42 @@ public class Program {
 		Locale.setDefault(Locale.US);
 		Scanner sc = new Scanner(System.in);
 
+		LocalDate checkout;
+		LocalDate checkin;
+		Reservation reservation = new Reservation();
 		DateTimeFormatter fmt1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		System.out.print("Room number: ");
 		int roomNumber = sc.nextInt();
 
-		System.out.print("Check-in date (dd/MM/yyyy): ");
-		String Scheckin = sc.next();
-		LocalDate checkin = LocalDate.parse(Scheckin, fmt1);
-		System.out.print("Check-out date (dd/MM/yyyy):");
-		String Scheckout = sc.next();
-		LocalDate checkout = LocalDate.parse(Scheckout, fmt1);
+		do {
+			System.out.print("Check-in date (dd/MM/yyyy): ");
+			checkin = LocalDate.parse(sc.next(), fmt1);
+			System.out.print("Check-out date (dd/MM/yyyy):");
+			checkout = LocalDate.parse(sc.next(), fmt1);
 
-		Reservation reservation = new Reservation(roomNumber, checkin, checkout);
-
-		System.out.println(reservation + " \n");
+			if (!checkin.isAfter(checkout)) {
+				reservation = new Reservation(roomNumber, checkin, checkout);
+				System.out.println(reservation + " \n");
+			} else {
+				System.out.println("Error in reservation: check out date must be after check-in date. \n");
+			}
+		} while (checkin.isAfter(checkout));
 
 		System.out.println("Enther the data to update the reservation: ");
-		System.out.print("Check-in date (dd/MM/yyyy): ");
-		Scheckin = sc.next();
-		checkin = LocalDate.parse(Scheckin, fmt1);
+		System.out.print("Check-in date (dd/MM/yyy): ");
+		checkin = LocalDate.parse(sc.next(), fmt1);
 		System.out.print("Check-out date (dd/MM/yyyy): ");
-		Scheckout = sc.next();
-		checkout = LocalDate.parse(Scheckout, fmt1);
-
-		reservation.updateDates(checkin, checkout);
+		checkout = LocalDate.parse(sc.next(), fmt1);
+		LocalDate before = LocalDate.now();
+		
+		if (checkin.isBefore(before) || checkout.isBefore(before)) {
+			System.out.println("Error in reservation: Reservation dates for update must be future dates");
+		} else if (checkin.isAfter(checkout)) {
+			System.out.println("Error in reservation: check out date must be after check-in date. \n");
+		} else {
+			reservation.updateDates(checkin, checkout);
+		}
 
 		System.out.println(reservation);
 
