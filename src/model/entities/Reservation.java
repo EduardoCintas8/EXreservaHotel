@@ -11,6 +11,7 @@ public class Reservation {
 	private LocalDate checkout;
 
 	public static DateTimeFormatter fmt1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
 	public Reservation() {
 	}
 
@@ -36,9 +37,18 @@ public class Reservation {
 		return checkout;
 	}
 
-	public void updateDates(LocalDate checkin, LocalDate checkout) {
-		this.checkin = checkin;
-		this.checkout = checkout;
+	public String updateDates(LocalDate checkin, LocalDate checkout) {
+
+		if (checkin.isBefore(LocalDate.now()) || checkout.isBefore(LocalDate.now())) {
+			return (" Reservation dates for update must be future dates");
+		}
+		if (checkin.isAfter(checkout)) {
+			return (" Check out date must be after check-in date. \n");
+		} else {
+			this.checkin = checkin;
+			this.checkout = checkout;
+			return null;
+		}
 
 	}
 
